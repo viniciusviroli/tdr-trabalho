@@ -1,0 +1,368 @@
+---
+title: "Viagens nas estações de bicicletas compartilhadas"
+author: "Vinicius Viroli Pereira"
+date: today
+lang: pt-BR
+format:
+  html:
+    self-contained: true
+    toc: true
+execute:
+  echo: false
+---
+
+# Os dados
+
+Os dados deste trabalho representam viagens realizadas em estações de bicicletas compartilhadas na cidade de Curitiba (PR). A base utilizada foi gerada especificamente para o login do autor no contexto da disciplina de Tecnologia de Dados, do curso de Bacharelado em Estatística e Ciência de Dados da Universidade Federal do Paraná (UFPR). Trata-se de um conjunto de dados simulados, desenvolvido para fins didáticos e de aprendizagem das técnicas apresentadas na disciplina.
+
+A unidade de observação é cada estação de bicicletas compartilhadas, identificada por um código único e caracterizada por seu nome, categoria de entorno e número de vagas. Os meses sem registro foram tratados como ausências (NA's) durante a etapa de conferência e substituídos por zero para os cálculos dos resumos, mantendo a decisão adotada na Lista 03 que utilizou a mesma base de dados e antecedeu o presente trabalho.
+
+Todas as tabelas deste trabalho seguem o padrão brasileiro de representação numérica, utilizando vírgulas como separadores decimais e pontos como separadores de milhares.
+
+
+```{r}
+#| include: false
+
+# Carregando os alvos do pipeline:
+
+suppressWarnings(suppressPackageStartupMessages(library(targets)))
+
+
+cadastro <- tar_read(cadastro)
+
+unidade_sem_medicao <- tar_read(
+  unidade_sem_medicao_tbl
+)
+
+conferencia_linhas <- tar_read(
+  conferencia_linhas
+)
+
+conferencia_ausentes <- tar_read(
+  conferencia_ausentes
+)
+
+conferencia_somas <- tar_read(
+  conferencia_somas
+)
+
+resumo_unidade <- tar_read(
+  resumo_unidade_tbl
+)
+
+resumo_categoria <- tar_read(
+  resumo_categoria_tbl
+)
+
+resumo_categoria_ano <- tar_read(
+  resumo_categoria_ano_tbl
+)
+
+resumo_sazonalidade <- tar_read(
+  resumo_sazonalidade_tbl
+)
+
+resumo_ano <- tar_read(
+  resumo_ano_tbl
+)
+
+medias_categoria <- tar_read(
+  medias_categoria_tbl
+)
+
+viagens_limpo <- tar_read(
+  viagens_limpo
+)
+
+modelo_relativa <- tar_read(
+  modelo_relativa
+)
+```
+
+O cadastro contém `{r} nrow(cadastro)` unidades.
+
+Uma unidade presente no cadastro não possui medições registradas no conjunto de viagens. Essa unidade é apresentada na @tbl-unidade-sem-medicao.
+
+```{r eval=TRUE}
+#| label: tbl-unidade-sem-medicao
+#| tbl-cap: "Unidade presente no cadastro sem medições registradas."
+
+knitr::kable(unidade_sem_medicao, align = "c")
+```
+
+A @tbl-conferencia-ausentes apresenta as conferências de integridade dos dados, incluindo a quantidade de registros ausentes e as somas anuais informadas no arquivo LEIA-ME.
+
+```{r eval=TRUE}
+#| label: tbl-conferencia-ausentes
+#| tbl-cap: "Quantidade de meses sem registro por ano."
+
+knitr::kable(conferencia_ausentes, align = "c")
+```
+
+A conferência das somas das viagens por ano é apresentada na @tbl-conferencia-somas:
+
+```{r eval=TRUE}
+#| label: tbl-conferencia-somas
+#| tbl-cap: "Soma anual das viagens por ano."
+
+knitr::kable(conferencia_somas, align = "c")
+```
+
+# Sazonalidade
+
+A @fig-sazonalidade apresenta a média mensal da medida relativa das viagens para cada ano da série analisada.
+
+```{r eval=TRUE}
+#| label: fig-sazonalidade
+#| fig-cap: "Média mensal da medida relativa das viagens por ano."
+
+
+suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
+
+ggplot(
+  resumo_sazonalidade,
+  aes(
+    x = mes,
+    y = media_relativa,
+    color = factor(ano),
+    group = ano
+  )
+) +
+  geom_line() +
+  geom_point() +
+  labs(
+    x = "Mês",
+    y = "Média da medida relativa",
+    color = "Ano"
+  )
+```
+
+O código abaixo avalia o mês de maior e o de menor média relativa.
+
+```{r eval=TRUE}
+
+sazonalidade_geral <-
+  resumo_sazonalidade |>
+  dplyr::group_by(mes) |>
+  dplyr::summarise(
+    media = mean(media_relativa),
+    .groups = "drop"
+  )
+
+mes_maior <-
+  sazonalidade_geral |>
+  dplyr::slice_max(
+    media,
+    n = 1
+  )
+
+mes_menor <-
+  sazonalidade_geral |>
+  dplyr::slice_min(
+    media,
+    n = 1
+  )
+
+mes_maior_nome <- dplyr::recode(
+  mes_maior$mes,
+  jan = "janeiro",
+  fev = "fevereiro",
+  mar = "março",
+  abr = "abril",
+  mai = "maio",
+  jun = "junho",
+  jul = "julho",
+  ago = "agosto",
+  set = "setembro",
+  out = "outubro",
+  nov = "novembro",
+  dez = "dezembro"
+)
+
+mes_menor_nome <- dplyr::recode(
+  mes_menor$mes,
+  jan = "janeiro",
+  fev = "fevereiro",
+  mar = "março",
+  abr = "abril",
+  mai = "maio",
+  jun = "junho",
+  jul = "julho",
+  ago = "agosto",
+  set = "setembro",
+  out = "outubro",
+  nov = "novembro",
+  dez = "dezembro"
+)
+
+```
+
+Considerando a média dos três anos, o mês com maior média relativa foi  `r mes_maior_nome`, com média de `{r} format(round(mes_maior$media, 2), decimal.mark = ",")`. Já o mês com menor média relativa foi `r mes_menor_nome`, com média de `{r} format(round(mes_menor$media, 2), decimal.mark = ",")`.
+
+# Variação entre 2023 e 2025
+
+```{r}
+
+media_2023 <-
+  resumo_ano |>
+  dplyr::filter(ano == 2023) |>
+  dplyr::pull(media_relativa)
+
+media_2025 <-
+  resumo_ano |>
+  dplyr::filter(ano == 2025) |>
+  dplyr::pull(media_relativa)
+
+variacao_percentual <-
+  (media_2025 / media_2023 - 1) * 100
+```
+
+A @tbl-resumo-ano apresenta o total de viagens e a média da medida relativa para cada ano analisado. A comparação é realizada utilizando a média da medida relativa, e não o total de viagens, porque a medida relativa considera a capacidade das estações (número de vagas), permitindo uma comparação mais adequada entre unidades de tamanhos diferentes.
+
+```{r}
+#| label: tbl-resumo-ano
+#| tbl-cap: "Resumo anual da medida relativa e do total de viagens."
+
+resumo_ano_fmt <- resumo_ano |>
+  dplyr::mutate(
+    media_relativa = format(
+      round(media_relativa, 2),
+      nsmall = 2,
+      decimal.mark = ","
+    )
+  )
+
+knitr::kable(resumo_ano_fmt, align = "c")
+```
+
+Entre 2023 e 2025, a média da medida relativa aumentou em `{r} format(round(variacao_percentual, 2), decimal.mark = ",")`%.
+
+## Modelo estatístico (opcional)
+
+```{r}
+coef_ano <-
+  coef(modelo_relativa)["ano"]
+
+variacao_anual <-
+  exp(coef_ano) - 1
+
+ic_ano <-
+  confint(modelo_relativa)["ano", ]
+
+ic_prop <-
+  exp(ic_ano) - 1
+```
+
+Além da análise descritiva, foi ajustado um modelo linear para o logaritmo da medida relativa em função do ano, do mês e da categoria de entorno.
+
+O coeficiente associado ao ano indica uma variação média anual de `{r} format(round(100 * variacao_anual, 2), decimal.mark = ",")`%.
+
+O intervalo de confiança de 95% para essa variação vai de `{r} format(round(100 * ic_prop[1], 2), decimal.mark = ",")`% a `r format(round(100 * ic_prop[2], 2), decimal.mark = ",")`%.
+
+Um resumo do modelo é apresentado a seguir. Em particular, o coeficiente associado ao ano quantifica a variação média anual da medida relativa após controlar simultaneamente os efeitos sazonais dos meses e as diferenças entre categorias de entorno. 
+
+```{r}
+summary(modelo_relativa)
+```
+
+# Diferenças entre categorias
+
+```{r}
+maior_categoria <-
+  dplyr::slice_max(
+    medias_categoria,
+    media_relativa,
+    n = 1
+  )
+
+menor_categoria <-
+  dplyr::slice_min(
+    medias_categoria,
+    media_relativa,
+    n = 1
+  )
+```
+
+A distribuição da medida relativa por categoria de entorno é apresentada na @fig-categorias.
+
+```{r}
+#| label: fig-categorias
+#| fig-cap: "Distribuição da medida relativa por categoria de entorno."
+
+library(ggplot2)
+
+ggplot(
+  viagens_limpo,
+  aes(
+    x = entorno,
+    y = viagens_relativas
+  )
+) +
+  geom_boxplot() +
+  labs(
+    x = "Categoria de entorno",
+    y = "Medida relativa"
+  )
+```
+
+As médias da medida relativa para cada categoria são apresentadas na @tbl-medias-categoria. 
+
+```{r}
+#| label: tbl-medias-categoria
+#| tbl-cap: "Média da medida relativa por categoria de entorno."
+
+medias_categoria_fmt <- medias_categoria |>
+  dplyr::mutate(
+    media_relativa = format(
+      round(media_relativa, 2),
+      nsmall = 2,
+      decimal.mark = ","
+    )
+  )
+
+knitr::kable(medias_categoria_fmt, align = "c")
+```
+
+A categoria Comercial apresentou a maior média da medida relativa, com valor de `r format(round(maior_categoria$media_relativa, 2), nsmall = 2, decimal.mark = ",")`. Por outro lado, a categoria Parque apresentou a menor média, com valor de `r format(round(menor_categoria$media_relativa, 2), nsmall = 2, decimal.mark = ",")`. Esses resultados sugerem diferenças no padrão de utilização das estações conforme o tipo de entorno em que estão localizadas.
+
+# As tabelas da Lista 03
+
+Esta seção apresenta as tabelas produzidas originalmente na Lista 03 e incorporadas ao pipeline reprodutível do projeto.
+
+## Por unidade
+
+A @tbl-resumo-unidade apresenta os resultados consolidados por unidade, incluindo o número de meses com registro, o total anual de viagens e a média da medida relativa.
+
+```{r}
+#| label: tbl-resumo-unidade
+#| tbl-cap: "Resumo dos indicadores por unidade."
+
+resumo_unidade_fmt <- resumo_unidade |>
+  dplyr::mutate(
+    media_relativa = format(
+      round(media_relativa, 2),
+      nsmall = 2,
+      decimal.mark = ","
+    )
+  )
+
+knitr::kable(resumo_unidade_fmt, align = "c")
+```
+
+## Por categoria e ano
+
+A @tbl-resumo-categoria-ano apresenta o total anual de viagens por categoria de entorno para cada ano da série analisada.
+
+```{r}
+#| label: tbl-resumo-categoria-ano
+#| tbl-cap: "Total anual de viagens por categoria e ano."
+
+resumo_categoria_ano_fmt <- resumo_categoria_ano |>
+  dplyr::mutate(
+    `2023` = format(`2023`, big.mark = ".", decimal.mark = ","),
+    `2024` = format(`2024`, big.mark = ".", decimal.mark = ","),
+    `2025` = format(`2025`, big.mark = ".", decimal.mark = ",")
+  )
+
+knitr::kable(resumo_categoria_ano_fmt, align = "c")
+```

@@ -48,3 +48,8 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Pipeline e renderização
+_targets/
+relatorio.html
+relatorio_files/
