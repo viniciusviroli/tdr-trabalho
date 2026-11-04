@@ -58,3 +58,52 @@ resumo_categoria_ano <- function(dados) {
 
 }
 
+resumo_sazonalidade <- function(dados) {
+  
+  dados |>
+    dplyr::group_by(
+      ano,
+      mes
+    ) |>
+    dplyr::summarise(
+      media_relativa = mean(
+        viagens_relativas
+      ),
+      .groups = "drop"
+    )
+  
+}
+
+
+resumo_ano <- function(dados) {
+  
+  dados |>
+    dplyr::group_by(ano) |>
+    dplyr::summarise(
+      media_relativa = mean(
+        viagens_relativas
+      ),
+      total_viagens = sum(
+        viagens
+      ),
+      .groups = "drop"
+    )
+  
+}
+
+medias_categoria <- function(dados) {
+  
+  dados |>
+    dplyr::group_by(entorno) |>
+    dplyr::summarise(
+      media_relativa = mean(
+        viagens_relativas
+      ),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(
+      dplyr::desc(media_relativa)
+    )
+  
+}
+

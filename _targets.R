@@ -21,6 +21,7 @@ lapply(
   source
 )
 
+############### list #######################################################
 
 list(
   
@@ -124,6 +125,15 @@ list(
       viagens_long
     )
   ),
+  
+  tar_target(
+    unidade_sem_medicao_tbl,
+    unidade_sem_medicao(
+      cadastro,
+      viagens_2023
+    )
+  ),
+  
   tar_target(
     resumo_unidade_tbl,
     resumo_unidade(
@@ -148,6 +158,25 @@ list(
   tar_quarto(
     relatorio,
     "analise.qmd"
-  )
+  ),
   
+  tar_target(
+    resumo_sazonalidade_tbl,
+    resumo_sazonalidade(
+      viagens_limpo
+    )
+  ),
+  
+  tar_target(
+    resumo_ano_tbl,
+    resumo_ano(
+      viagens_limpo
+    )
+  ),
+  tar_target(
+    medias_categoria_tbl,
+    medias_categoria(
+      viagens_limpo
+    )
+  )
 )

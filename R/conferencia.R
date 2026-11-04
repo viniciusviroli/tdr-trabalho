@@ -23,3 +23,13 @@ conferir_somas <- function(dados) {
     )
 
 }
+
+unidade_sem_medicao <- function(cadastro, viagens) {
+  
+  cadastro |>
+    dplyr::anti_join(
+      viagens,
+      by = "codigo"
+    )
+  
+}
