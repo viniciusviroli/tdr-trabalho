@@ -21,7 +21,7 @@ jobs:
       - name: Instala as bibliotecas do sistema
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc
+          sudo apt-get install -y pandoc libglpk-dev
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
