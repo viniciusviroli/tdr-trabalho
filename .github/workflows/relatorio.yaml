@@ -1,24 +1,22 @@
 on:
   push:
-    branches:
-      - main
-      - trabalho
+    branches: [main, trabalho]
+
   pull_request:
-    branches:
-      - main
-      - trabalho
+
   workflow_dispatch:
 
 name: relatorio
 
-permissions: read-all
+permissions:
+  read-all
 
 jobs:
   relatorio:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       - name: Instala as bibliotecas do sistema
         run: |
@@ -37,7 +35,7 @@ jobs:
         run: targets::tar_make()
         shell: Rscript {0}
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         with:
           name: relatorio
-          path: relatorio.html
+          path: analise.html
