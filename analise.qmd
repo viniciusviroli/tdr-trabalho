@@ -73,6 +73,10 @@ medias_categoria <- tar_read(
 viagens_limpo <- tar_read(
   viagens_limpo
 )
+
+modelo_relativa <- tar_read(
+  modelo_relativa
+)
 ```
 
 O cadastro contém `{r} nrow(cadastro)` unidades.
@@ -232,6 +236,34 @@ knitr::kable(resumo_ano_fmt, align = "c")
 ```
 
 Entre 2023 e 2025, a média da medida relativa aumentou em `{r} format(round(variacao_percentual, 2), decimal.mark = ",")`%.
+
+## Modelo estatístico (opcional)
+
+```{r}
+coef_ano <-
+  coef(modelo_relativa)["ano"]
+
+variacao_anual <-
+  exp(coef_ano) - 1
+
+ic_ano <-
+  confint(modelo_relativa)["ano", ]
+
+ic_prop <-
+  exp(ic_ano) - 1
+```
+
+Além da análise descritiva, foi ajustado um modelo linear para o logaritmo da medida relativa em função do ano, do mês e da categoria de entorno.
+
+O coeficiente associado ao ano indica uma variação média anual de `{r} format(round(100 * variacao_anual, 2), decimal.mark = ",")`%.
+
+O intervalo de confiança de 95% para essa variação vai de `{r} format(round(100 * ic_prop[1], 2), decimal.mark = ",")`% a `r format(round(100 * ic_prop[2], 2), decimal.mark = ",")`%.
+
+Um resumo do modelo é apresentado a seguir. Em particular, o coeficiente associado ao ano quantifica a variação média anual da medida relativa após controlar simultaneamente os efeitos sazonais dos meses e as diferenças entre categorias de entorno. 
+
+```{r}
+summary(modelo_relativa)
+```
 
 # Diferenças entre categorias
 

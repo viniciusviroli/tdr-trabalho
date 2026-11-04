@@ -2175,7 +2175,10 @@ vertical-align: -.125em;
   <ul>
   <li><a href="#os-dados" id="toc-os-dados" class="nav-link active" data-scroll-target="#os-dados">Os dados</a></li>
   <li><a href="#sazonalidade" id="toc-sazonalidade" class="nav-link" data-scroll-target="#sazonalidade">Sazonalidade</a></li>
-  <li><a href="#variação-entre-2023-e-2025" id="toc-variação-entre-2023-e-2025" class="nav-link" data-scroll-target="#variação-entre-2023-e-2025">Variação entre 2023 e 2025</a></li>
+  <li><a href="#variação-entre-2023-e-2025" id="toc-variação-entre-2023-e-2025" class="nav-link" data-scroll-target="#variação-entre-2023-e-2025">Variação entre 2023 e 2025</a>
+  <ul class="collapse">
+  <li><a href="#modelo-estatístico-opcional" id="toc-modelo-estatístico-opcional" class="nav-link" data-scroll-target="#modelo-estatístico-opcional">Modelo estatístico (opcional)</a></li>
+  </ul></li>
   <li><a href="#diferenças-entre-categorias" id="toc-diferenças-entre-categorias" class="nav-link" data-scroll-target="#diferenças-entre-categorias">Diferenças entre categorias</a></li>
   <li><a href="#as-tabelas-da-lista-03" id="toc-as-tabelas-da-lista-03" class="nav-link" data-scroll-target="#as-tabelas-da-lista-03">As tabelas da Lista 03</a>
   <ul class="collapse">
@@ -2392,6 +2395,49 @@ Tabela 4: Resumo anual da medida relativa e do total de viagens.
 </div>
 </div>
 <p>Entre 2023 e 2025, a média da medida relativa aumentou em 22,14%.</p>
+<section id="modelo-estatístico-opcional" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-estatístico-opcional">Modelo estatístico (opcional)</h2>
+<p>Além da análise descritiva, foi ajustado um modelo linear para o logaritmo da medida relativa em função do ano, do mês e da categoria de entorno.</p>
+<p>O coeficiente associado ao ano indica uma variação média anual de 9,39%.</p>
+<p>O intervalo de confiança de 95% para essa variação vai de 7,77% a 11,03%.</p>
+<p>Parte do resumo do modelo é apresentada a seguir. Em particular, o coeficiente associado ao ano quantifica a variação média anual da medida relativa após controlar simultaneamente os efeitos sazonais dos meses e as diferenças entre categorias de entorno.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(viagens_relativas) ~ ano + mes + entorno, data = dplyr::filter(dados, 
+    viagens_relativas &gt; 0))
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.270215 -0.066534  0.009265  0.070166  0.227376 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        -1.774e+02  1.533e+01 -11.567  &lt; 2e-16 ***
+ano                 8.975e-02  7.576e-03  11.847  &lt; 2e-16 ***
+mesfev             -5.048e-02  3.013e-02  -1.676  0.09500 .  
+mesmar             -9.618e-02  3.013e-02  -3.193  0.00158 ** 
+mesabr             -1.497e-01  3.013e-02  -4.967 1.23e-06 ***
+mesmai             -2.697e-01  3.086e-02  -8.741 2.82e-16 ***
+mesjun             -3.820e-01  2.980e-02 -12.817  &lt; 2e-16 ***
+mesjul             -3.575e-01  2.980e-02 -11.996  &lt; 2e-16 ***
+mesago             -2.887e-01  3.013e-02  -9.584  &lt; 2e-16 ***
+messet             -1.436e-01  3.013e-02  -4.765 3.13e-06 ***
+mesout             -1.265e-01  2.980e-02  -4.243 3.06e-05 ***
+mesnov             -7.947e-02  3.048e-02  -2.607  0.00965 ** 
+mesdez             -9.368e-02  3.012e-02  -3.110  0.00208 ** 
+entornoParque      -4.004e-01  1.436e-02 -27.873  &lt; 2e-16 ***
+entornoResidencial -3.057e-01  1.597e-02 -19.136  &lt; 2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.1032 on 262 degrees of freedom
+Multiple R-squared:  0.8359,    Adjusted R-squared:  0.8272 
+F-statistic: 95.34 on 14 and 262 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
 </section>
 <section id="diferenças-entre-categorias" class="level1">
 <h1>Diferenças entre categorias</h1>

@@ -178,5 +178,12 @@ list(
     medias_categoria(
       viagens_limpo
     )
+  ),
+  
+  tar_target(
+    modelo_relativa,
+    ajustar_modelo_relativa(
+      viagens_limpo
+    )
   )
 )
