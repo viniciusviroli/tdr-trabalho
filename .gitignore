@@ -51,5 +51,6 @@ rsconnect/
 
 # Pipeline e renderização
 _targets/
-relatorio.html
-relatorio_files/
+analise.html
+analise_files/
+
