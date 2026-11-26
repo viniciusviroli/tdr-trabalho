@@ -2209,7 +2209,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Data de Publicação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">4 de novembro de 2026</p>
+      <p class="date">25 de novembro de 2026</p>
     </div>
   </div>
   
@@ -2223,7 +2223,7 @@ vertical-align: -.125em;
 
 <section id="os-dados" class="level1">
 <h1>Os dados</h1>
-<p>Os dados deste trabalho representam viagens realizadas em estações de bicicletas compartilhadas na cidade de Curitiba (PR). A base utilizada foi gerada especificamente para o login do autor no contexto da disciplina de Tecnologia de Dados, do curso de Bacharelado em Estatística e Ciência de Dados da Universidade Federal do Paraná (UFPR). Trata-se de um conjunto de dados simulados, desenvolvido para fins didáticos e de aprendizagem das técnicas apresentadas na disciplina.</p>
+<p>Os dados deste trabalho representam viagens realizadas em estações de bicicletas compartilhadas. A base utilizada foi gerada especificamente para o login do autor no contexto da disciplina de Tecnologia de Dados, do curso de Bacharelado em Estatística e Ciência de Dados da Universidade Federal do Paraná (UFPR). Trata-se de um conjunto de dados simulados, desenvolvido para fins didáticos e de aprendizagem das técnicas apresentadas na disciplina.</p>
 <p>A unidade de observação é cada estação de bicicletas compartilhadas, identificada por um código único e caracterizada por seu nome, categoria de entorno e número de vagas. Os meses sem registro foram tratados como ausências (NA’s) durante a etapa de conferência e substituídos por zero para os cálculos dos resumos, mantendo a decisão adotada na Lista 03 que utilizou a mesma base de dados e antecedeu o presente trabalho.</p>
 <p>Todas as tabelas deste trabalho seguem o padrão brasileiro de representação numérica, utilizando vírgulas como separadores decimais e pontos como separadores de milhares.</p>
 <p>O cadastro contém 9 unidades.</p>
@@ -2259,7 +2259,7 @@ Tabela 1: Unidade presente no cadastro sem medições registradas.
 </figure>
 </div>
 </div>
-<p>A <a href="#tbl-conferencia-ausentes" class="quarto-xref">Tabela 2</a> apresenta as conferências de integridade dos dados, incluindo a quantidade de registros ausentes e as somas anuais informadas no arquivo LEIA-ME.</p>
+<p>A <a href="#tbl-conferencia-ausentes" class="quarto-xref">Tabela 2</a> apresenta as conferências de integridade dos dados, incluindo a quantidade de registros ausentes e as somas anuais informadas no arquivo LEIA-ME. O conjunto de dados empilhado contém 288 registros.</p>
 <div class="cell">
 <div id="tbl-conferencia-ausentes" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -2349,7 +2349,6 @@ Figura 1: Média mensal da medida relativa das viagens por ano.
 </div>
 </div>
 </div>
-<p>O código abaixo avalia o mês de maior e o de menor média relativa.</p>
 <p>Considerando a média dos três anos, o mês com maior média relativa foi janeiro, com média de 59,6. Já o mês com menor média relativa foi maio, com média de 40,26.</p>
 </section>
 <section id="variação-entre-2023-e-2025" class="level1">
@@ -2400,7 +2399,7 @@ Tabela 4: Resumo anual da medida relativa e do total de viagens.
 <p>Além da análise descritiva, foi ajustado um modelo linear para o logaritmo da medida relativa em função do ano, do mês e da categoria de entorno.</p>
 <p>O coeficiente associado ao ano indica uma variação média anual de 9,39%.</p>
 <p>O intervalo de confiança de 95% para essa variação vai de 7,77% a 11,03%.</p>
-<p>Parte do resumo do modelo é apresentada a seguir. Em particular, o coeficiente associado ao ano quantifica a variação média anual da medida relativa após controlar simultaneamente os efeitos sazonais dos meses e as diferenças entre categorias de entorno.</p>
+<p>Um resumo do modelo é apresentado a seguir. Em particular, o coeficiente associado ao ano quantifica a variação média anual da medida relativa após controlar simultaneamente os efeitos sazonais dos meses e as diferenças entre categorias de entorno.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>

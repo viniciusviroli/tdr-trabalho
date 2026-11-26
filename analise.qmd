@@ -13,7 +13,7 @@ execute:
 
 # Os dados
 
-Os dados deste trabalho representam viagens realizadas em estações de bicicletas compartilhadas na cidade de Curitiba (PR). A base utilizada foi gerada especificamente para o login do autor no contexto da disciplina de Tecnologia de Dados, do curso de Bacharelado em Estatística e Ciência de Dados da Universidade Federal do Paraná (UFPR). Trata-se de um conjunto de dados simulados, desenvolvido para fins didáticos e de aprendizagem das técnicas apresentadas na disciplina.
+Os dados deste trabalho representam viagens realizadas em estações de bicicletas compartilhadas. A base utilizada foi gerada especificamente para o login do autor no contexto da disciplina de Tecnologia de Dados, do curso de Bacharelado em Estatística e Ciência de Dados da Universidade Federal do Paraná (UFPR). Trata-se de um conjunto de dados simulados, desenvolvido para fins didáticos e de aprendizagem das técnicas apresentadas na disciplina.
 
 A unidade de observação é cada estação de bicicletas compartilhadas, identificada por um código único e caracterizada por seu nome, categoria de entorno e número de vagas. Os meses sem registro foram tratados como ausências (NA's) durante a etapa de conferência e substituídos por zero para os cálculos dos resumos, mantendo a decisão adotada na Lista 03 que utilizou a mesma base de dados e antecedeu o presente trabalho.
 
@@ -90,7 +90,7 @@ Uma unidade presente no cadastro não possui medições registradas no conjunto 
 knitr::kable(unidade_sem_medicao, align = "c")
 ```
 
-A @tbl-conferencia-ausentes apresenta as conferências de integridade dos dados, incluindo a quantidade de registros ausentes e as somas anuais informadas no arquivo LEIA-ME.
+A @tbl-conferencia-ausentes apresenta as conferências de integridade dos dados, incluindo a quantidade de registros ausentes e as somas anuais informadas no arquivo LEIA-ME. O conjunto de dados empilhado contém `r conferencia_linhas` registros.
 
 ```{r eval=TRUE}
 #| label: tbl-conferencia-ausentes
@@ -137,7 +137,6 @@ ggplot(
   )
 ```
 
-O código abaixo avalia o mês de maior e o de menor média relativa.
 
 ```{r eval=TRUE}
 
@@ -215,6 +214,12 @@ media_2025 <-
 
 variacao_percentual <-
   (media_2025 / media_2023 - 1) * 100
+
+direcao <- ifelse(
+  variacao_percentual >= 0,
+  "aumentou",
+  "reduziu"
+)
 ```
 
 A @tbl-resumo-ano apresenta o total de viagens e a média da medida relativa para cada ano analisado. A comparação é realizada utilizando a média da medida relativa, e não o total de viagens, porque a medida relativa considera a capacidade das estações (número de vagas), permitindo uma comparação mais adequada entre unidades de tamanhos diferentes.
@@ -235,7 +240,7 @@ resumo_ano_fmt <- resumo_ano |>
 knitr::kable(resumo_ano_fmt, align = "c")
 ```
 
-Entre 2023 e 2025, a média da medida relativa aumentou em `{r} format(round(variacao_percentual, 2), decimal.mark = ",")`%.
+Entre 2023 e 2025, a média da medida relativa `r direcao` em `r format(round(abs(variacao_percentual), 2), decimal.mark = ",")`%.
 
 ## Modelo estatístico (opcional)
 
@@ -323,7 +328,7 @@ medias_categoria_fmt <- medias_categoria |>
 knitr::kable(medias_categoria_fmt, align = "c")
 ```
 
-A categoria Comercial apresentou a maior média da medida relativa, com valor de `r format(round(maior_categoria$media_relativa, 2), nsmall = 2, decimal.mark = ",")`. Por outro lado, a categoria Parque apresentou a menor média, com valor de `r format(round(menor_categoria$media_relativa, 2), nsmall = 2, decimal.mark = ",")`. Esses resultados sugerem diferenças no padrão de utilização das estações conforme o tipo de entorno em que estão localizadas.
+A categoria `r maior_categoria$entorno` apresentou a maior média da medida relativa, com valor de `r format(round(maior_categoria$media_relativa, 2), nsmall = 2, decimal.mark = ",")`. Por outro lado, a categoria `r menor_categoria$entorno` apresentou a menor média, com valor de `r format(round(menor_categoria$media_relativa, 2), nsmall = 2, decimal.mark = ",")`. Esses resultados sugerem diferenças no padrão de utilização das estações conforme o tipo de entorno em que estão localizadas.
 
 # As tabelas da Lista 03
 
