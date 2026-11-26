@@ -48,3 +48,9 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Pipeline e renderização
+_targets/
+analise.html
+analise_files/
+
