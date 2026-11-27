@@ -2,7 +2,7 @@
 
 Projeto desenvolvido na disciplina **Tecnologia de Dados** do curso de **Bacharelado em Estatística e Ciência de Dados** da **Universidade Federal do Paraná (UFPR)**.
 
-O projeto analisa dados simulados de viagens em estações de bicicletas compartilhadas na cidade de Curitiba (PR), utilizando um pipeline reproduzível construído com o pacote `targets`. O objetivo é realizar a importação, conferência, transformação e análise dos dados, gerando automaticamente um relatório com os resultados obtidos.
+O projeto analisa dados simulados de viagens em estações de bicicletas compartilhadas, utilizando um pipeline reproduzível construído com o pacote `targets`. O objetivo é realizar a importação, conferência, transformação e análise dos dados, gerando automaticamente um relatório com os resultados obtidos.
 
 ## Reproduzindo o projeto
 
